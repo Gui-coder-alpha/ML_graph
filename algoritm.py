@@ -12,10 +12,22 @@ class Universal_ML:
         return np.maximum(0, Features)
     
     def sim(self):
-        return "hiiii"
+        return "test"
+
     def Foward_function(self, Features):
         Features_foward_1 = (Features @ self.weights_1) + self.bias_1
         Features_Z = self.activation(Features_foward_1)
 
         Features_transformed = (Features_Z @ self.weights_2) + self.bias_2
-        return Features_transformed
+        return Features_Z, Features_transformed
+
+    def Backward_function(self, Features_transformed, Target, Learning_rate, Features_with_activation):
+        Features_foward_final = (1/Learning_rate) * (Features_transformed - Target)
+        print(Features_foward_final)
+        Weights_foward_final = np.transpose(Features_with_activation) @ Features_foward_final
+        print(Weights_foward_final)
+
+        Features_foward_2 = (Features_foward_final @ np.transpose(Weights_foward_final)) * Features_with_activation
+        print("bbbbbbbbbbbbbbbbb")
+        print(Features_foward_2)
+        return Features_foward_2
