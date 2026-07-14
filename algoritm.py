@@ -22,12 +22,13 @@ class Universal_ML:
         return Features_Z, Features_transformed
 
     def Backward_function(self, Features_transformed, Target, Learning_rate, Features_with_activation):
-        Features_foward_final = (1/Learning_rate) * (Features_transformed - Target)
-        print(Features_foward_final)
+        m = Features_transformed.shape[0]
+        Features_foward_final = (1/m) * (Features_transformed - Target)
         Weights_foward_final = np.transpose(Features_with_activation) @ Features_foward_final
-        print(Weights_foward_final)
+        Bias_gradient_final = np.sum(Features_foward_final, axis=0, keepdims=True)
 
-        Features_foward_2 = (Features_foward_final @ np.transpose(Weights_foward_final)) * Features_with_activation
-        print("bbbbbbbbbbbbbbbbb")
-        print(Features_foward_2)
+        Relu_derivative = (Features_with_activation > 0).astype(float)
+        Features_foward_2 = (Features_foward_final @ np.transpose(Weights_foward_final)) * Relu_derivative
+        Bias_gradient_2 = np.sum(Features_foward_2, axis=0, keepdims=True)
+
         return Features_foward_2
