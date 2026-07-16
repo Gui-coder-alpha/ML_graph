@@ -11,8 +11,9 @@ class Universal_ML:
     def activation(self, Features):
         return np.maximum(0, Features)
     
-    def sim(self):
-        return "test"
+    def Gradient_descent(self):
+        return None
+        
 
     def Foward_function(self, Features):
         Features_foward_1 = (Features @ self.weights_1) + self.bias_1
@@ -21,14 +22,20 @@ class Universal_ML:
         Features_transformed = (Features_Z @ self.weights_2) + self.bias_2
         return Features_Z, Features_transformed
 
-    def Backward_function(self, Features_transformed, Target, Learning_rate, Features_with_activation):
+    def Backward_function(self, Features_transformed, Target, Features, Features_with_activation):
         m = Features_transformed.shape[0]
-        Features_foward_final = (1/m) * (Features_transformed - Target)
+        Features_foward_final = (1/m) * (Features_transformed - Target) #sense of the cost function
         Weights_foward_final = np.transpose(Features_with_activation) @ Features_foward_final
         Bias_gradient_final = np.sum(Features_foward_final, axis=0, keepdims=True)
 
         Relu_derivative = (Features_with_activation > 0).astype(float)
         Features_foward_2 = (Features_foward_final @ np.transpose(Weights_foward_final)) * Relu_derivative
         Bias_gradient_2 = np.sum(Features_foward_2, axis=0, keepdims=True)
+        weights_foward_2 = np.transpose(Features) @ Features_foward_2
 
-        return Features_foward_2
+        return Features_foward_2, Features_foward_final, Weights_foward_final, weights_foward_2, Bias_gradient_2, Bias_gradient_final
+    
+    def Cost_function(self, Features_transformed, Target):
+        n = Features_transformed.shape[0]
+        Cost = (1/n) * np.sum((Features_transformed - Target) ** 2)
+        return Cost
